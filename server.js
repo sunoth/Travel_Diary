@@ -2,15 +2,18 @@ const express = require("express");
 const path = require('path');
 const {open} = require("sqlite");
 const sqlite3 = require('sqlite3');
+const cors = require('cors');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
 const server = express();
 server.use(express.json());
+server.use(cors());
 const dpPath = path.join(__dirname,"traveldiary.db");
 const PORT = process.env.PORT || 3000;
 
 let db = null;
+
 
 const initializeServerAndDb = async () => {
     try{
@@ -148,11 +151,11 @@ class User {
 
     //profile management
 
-    async getAllUsers(request,response){
-        const usersQuery = `SELECT * FROM user`;
-        const users = await db.all(usersQuery);
-        response.send(users);
-    }
+    // async getAllUsers(request,response){
+    //     const usersQuery = `SELECT * FROM user`;
+    //     const users = await db.all(usersQuery);
+    //     response.send(users);
+    // }
 
     async updateProfileDetails(request,response) {
         const {emailId} = request.params;
@@ -242,9 +245,9 @@ server.post('/login/', (request,response) => {
     userObject.loginUser(request,response);
 })
 
-server.get('/login/', userObject.authenticateToken, (request,response) => {
-    userObject.getAllUsers(request,response);
-})
+// server.get('/login/', userObject.authenticateToken, (request,response) => {
+//     userObject.getAllUsers(request,response);
+// })
 
 server.put('/login/:emailId/', userObject.authenticateToken, (request,response) => {
     userObject.updateProfileDetails(request,response);
